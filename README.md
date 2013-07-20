@@ -10,10 +10,17 @@ clone and locally install
 
 ## Usage
 
-    user> (use 'clj-ip.taobao)
+    user=> (use 'clj-ip.taobao)
     nil
-    user> (ip-info "8.8.8.8")
+    user=> (def ret (ip-info "8.8.8.8"))
+    #'user/ret
+    user=> ret
     {:country "美国", :region-id "", :isp-id "", :area "", :area-id "", :city-id "", :country-id "US", :city "", :isp "", :county "", :region "", :ip "8.8.8.8", :county-id ""}
+    user=> (:country ret)
+    "美国"
+    user=> (-> "8.8.8.8" ip-info :country-id)
+    "US"
+
     user> (ip-info "444.44")
     nil
 
