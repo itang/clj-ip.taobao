@@ -1,5 +1,5 @@
 (ns clj-ip.taobao
-  (:require [cheshire.core :refer [decode]]))
+  (:require [cheshire.core :as json]))
 
 (def ^{:doc "taobao REST API url"}
   rest-api-url-prefix "http://ip.taobao.com/service/getIpInfo.php?ip=")
@@ -7,11 +7,11 @@
 (defn ip-info
   "get ip info"
   [ip]
-  (let [ret (decode (slurp (str rest-api-url-prefix ip) :encoding "UTF-8"))]
+  (let [ret (-> (str rest-api-url-prefix ip)
+                (slurp :encoding "UTF-8")
+                json/decode)]
     (when (zero? (get ret "code"))
       (->> (get ret "data")
-           (map (fn[t]
-                  (let [[^String k v] t
-                        nk (-> k (.replace "_" "-") keyword)]
-                    [nk v])))
+           (map #(let [[k v] %]
+                   [(-> ^String k (.replace "_" "-") keyword) v]))
            (into {})))))
