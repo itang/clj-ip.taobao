@@ -7,7 +7,7 @@
 (defn ip-info
   "get ip info"
   [ip]
-  (let [ret (decode (slurp (str rest-api-url-prefix ip)))]
+  (let [ret (decode (slurp (str rest-api-url-prefix ip) :encoding "UTF-8"))]
     (when (zero? (get ret "code"))
       (->> (get ret "data")
            (map (fn[t]
