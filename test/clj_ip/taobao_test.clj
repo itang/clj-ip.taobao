@@ -5,5 +5,5 @@
 (deftest ip-info-test
   (testing "get ip info"
     (is (= "US"
-           (:country-id (ip-info "8.8.8.8"))))
-    (is (nil? (ip-info "444.44")))))
+           (get-in (ip-info "8.8.8.8") [:data :country-id])))
+    (is (false? (:ok (ip-info "444.44"))))))

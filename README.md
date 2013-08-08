@@ -15,14 +15,16 @@ clone and locally install
     user=> (def ret (ip-info "8.8.8.8"))
     #'user/ret
     user=> ret
-    {:country "美国", :region-id "", :isp-id "", :area "", :area-id "", :city-id "", :country-id "US", :city "", :isp "", :county "", :region "", :ip "8.8.8.8", :county-id ""}
-    user=> (:country ret)
+    {:ok true, :data {:country "美国", :region-id "", :isp-id "", :area "", :area-id "", :city-id "", :country-id "US", :city "", :isp "", :county "", :region "", :ip "8.8.8.8", :county-id ""}, :code 0}
+    user=> (:ok ret)
+    true
+    user=> (get-in ret [:data :country])
     "美国"
-    user=> (-> "8.8.8.8" ip-info :country-id)
+    user=> (-> "8.8.8.8" ip-info :data :country-id)
     "US"
 
     user> (ip-info "444.44")
-    nil
+    {:ok false, :code 1, :data "invaild ip."}
 
 ## License
 

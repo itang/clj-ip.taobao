@@ -7,11 +7,15 @@
 (defn ip-info
   "get ip info"
   [ip]
-  (let [ret (-> (str rest-api-url-prefix ip)
-                (slurp :encoding "UTF-8")
-                json/decode)]
-    (when (zero? (get ret "code"))
-      (->> (get ret "data")
-           (map #(let [[k v] %]
-                   [(-> ^String k (.replace "_" "-") keyword) v]))
-           (into {})))))
+  (let [{:strs [code data] :as ret}
+        (-> (str rest-api-url-prefix ip)
+            (slurp :encoding "UTF-8")
+            json/decode)]
+    (if (zero? code)
+      {:ok true
+       :data (->> data
+                  (map #(let [[k v] %]
+                          [(-> ^String k (.replace "_" "-") keyword) v]))
+                  (into {}))
+       :code code}
+      {:ok false :code code :data data})))
